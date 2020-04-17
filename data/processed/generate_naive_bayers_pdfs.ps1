@@ -1,0 +1,1 @@
+python c:\users\safae\anaconda3\Scripts\plantcv-train.py naive_bayes_multiclass --file pixel_samples.txt --outfile naive_bayes_pdfs.txt --plots
