@@ -20,23 +20,9 @@ class Highway_DataSet(data.Dataset):
         # self.root = root
         self.root = '../data/projetSession'
         self.transforms = transform
-        # load all image files, sorting them to
-        # ensure that they are aligned
-        # self.imgs = list(sorted(os.listdir(os.path.join(root, "input"))))
-        # self.masks = list(sorted(os.listdir(os.path.join(root, "groundtruth"))))
 
-        # self.imgs = [ 'in{:06}.jpg'.format(i) for i in range(1,1701) ]
-        # self.masks = ['gt{:06}.png'.format(i) for i in range(1, 1701)]
-
-        # if set =='train':
-        #     self.imgs = self.imgs[:int(len(self.imgs)*0.8)]
-        #     self.masks = self.masks[:int(len(self.masks)*0.8)]
-        # elif set =='test':
-        #     self.imgs = self.imgs[int(len(self.imgs)*0.8):]
-        #     self.masks = self.masks[int(len(self.masks)*0.8):]
-
-        self.imgs = os.listdir(self.root+'/input2')
-        self.masks = os.listdir(self.root+'/groundTruth2')
+        self.imgs = os.listdir(self.root+'/input')
+        self.masks = os.listdir(self.root+'/groundTruth')
         self.imgs = sorted(self.imgs)
         self.masks = sorted(self.masks)
         assert np.all([ i[:1] == j[:1] for i,j in zip(self.imgs,self.masks)]) 
@@ -61,14 +47,12 @@ class Highway_DataSet(data.Dataset):
         """
         # load images ad masks
         img_path = os.path.join(self.root, "input", self.imgs[idx])
-        mask_path = os.path.join(self.root, "groundtruth", self.masks[idx])
-        img_path = os.path.join(self.root, "input2", self.imgs[idx])
-        mask_path = os.path.join(self.root, "groundTruth2", self.masks[idx])
-        img = Image.open(img_path).convert("RGB")
+        mask_path = os.path.join(self.root, "groundTruth", self.masks[idx])
+        img = Image.open(img_path).resize((960,720)).convert("RGB")
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
         # with 0 being background
-        mask = Image.open(mask_path)
+        mask = Image.open(mask_path).resize((960,720))
         # convert the PIL Image into a numpy array
         mask = np.array(mask)
         # instances are encoded as different colors

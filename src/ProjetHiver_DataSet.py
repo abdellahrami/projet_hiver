@@ -24,8 +24,8 @@ class ProjetHiver_DataSet(data.Dataset):
         # self.imgs = list(sorted(os.listdir(os.path.join(root, "input"))))
         # self.masks = list(sorted(os.listdir(os.path.join(root, "groundtruth"))))
 
-        self.imgs = os.listdir(root+'/input2')
-        self.masks = os.listdir(root+'/groundTruth2')
+        self.imgs = os.listdir(root+'/input')
+        self.masks = os.listdir(root+'/groundTruth')
         self.imgs = sorted(self.imgs)
         self.masks = sorted(self.masks)
         # assert np.all([ i[:1] == j[:1] for i,j in zip(self.imgs,self.masks)]) 
@@ -50,15 +50,15 @@ class ProjetHiver_DataSet(data.Dataset):
 
         """
         # load images ad masks
-        img_path = os.path.join(self.root, "input2", self.imgs[idx])
-        mask_path = os.path.join(self.root, "groundTruth2", self.masks[idx])
+        img_path = os.path.join(self.root, "input", self.imgs[idx])
+        mask_path = os.path.join(self.root, "groundTruth", self.masks[idx])
         img = Image.open(img_path).convert("RGB")
-        # img.resize((200, 356))
+        img = img.resize((300,533))
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
         # with 0 being background
         mask = Image.open(mask_path)
-        # mask.resize((300,533))
+        mask = mask.resize((300,533))
         # convert the PIL Image into a numpy array
         mask = np.array(mask)
         # instances are encoded as different colors

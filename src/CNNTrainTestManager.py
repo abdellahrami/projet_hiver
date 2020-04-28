@@ -279,6 +279,36 @@ class CNNTrainTestManager(object):
         f.savefig('fig2.png')
         # show image
         plt.show()
+    
+    def predict_image(self,img):
+        
+        # Since the model expect a 4D we need to add the batch dim in order to get the 4D
+        img = np.expand_dims(img, axis=0)
+        # convert image to Tensor
+        img = torch.from_numpy(img)
+        img = img.to(self.device)
+        prediction = self.model(img)
+        # delete the batch dimension
+        prediction = np.squeeze(prediction)
+        # convert prediction to numpy array
+        # take into account if model is trained on cpu or gpu
+        if self.use_cuda and torch.cuda.is_available():
+            prediction = prediction.detach().cpu().numpy()
+        else:
+            prediction = prediction.detach().numpy()
+        # from one_hot vector to categorical
+        prediction = np.argmax(prediction, axis=0)
+        # convert the predicted mask to rgb image
+        prediction = convert_mask_to_rgb_image(prediction)
+        # remove the batch dim and the channel dim of img
+        img = np.squeeze(np.squeeze(img))
+        # convert img to a numpy array
+        if self.use_cuda and torch.cuda.is_available():
+            img = img.cpu().numpy()
+        else:
+            img = img.numpy()
+
+        return prediction
 
 
 def optimizer_setup(optimizer_class: Type[torch.optim.Optimizer], **hyperparameters) -> \
